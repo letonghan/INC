@@ -38,11 +38,11 @@ stages:
     steps:
       - script: 
           pip install transformers==4.10.0
-          pip install -r neural-compressor/examples/pytorch/nlp/huggingface_models/text-classification/quantization/ptq_static/fx/requirements.txt
+          pip install -r examples/pytorch/nlp/huggingface_models/text-classification/quantization/ptq_static/fx/requirements.txt
           pip install torch
         displayName: 'Install requirements'
       - script: 
-          python -u neural-compressor/examples/pytorch/nlp/huggingface_models/text-classification/quantization/ptq_static/fx/run_qa.py 
+          python -u examples/pytorch/nlp/huggingface_models/text-classification/quantization/ptq_static/fx/run_qa.py 
           --model_name_or_path "bert-large-uncased-whole-word-masking-finetuned-squad" 
           --dataset_name "squad" 
           --do_eval 
