@@ -48,9 +48,9 @@ stages:
           --do_eval 
           --do_train 
           --max_seq_length 128 
-          --per_device_eval_batch_size ${batch_size} 
+          --per_device_eval_batch_size 16
           --no_cuda 
-          --output_dir /path/to/checkpoint/dir 
+          --output_dir /saved_results
           --tune 
           --overwrite_output_dir 
           --dataloader_drop_last
