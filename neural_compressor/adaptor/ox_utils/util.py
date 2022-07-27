@@ -60,7 +60,25 @@ def _get_qrange_for_qType(qType, reduce_range=False):
     else:
         raise ValueError('unsupported quantization data type')
 
-def convert_np_to_float16(np_array, min_positive_val=1e-7, max_finite_val=1e4):
+def split_shared_bias(model):
+    for input_name, node_list in model.input_name_to_nodes.items():
+        if len(node_list) > 1 and input_name in [i.name for i in model.model.graph.initializer]:
+            for node in node_list[1:]:
+                if node.op_type not in ['Conv', 'FusedConv']:
+                    continue
+                if node.input[2] == input_name:
+                    new_input_name = node.input[2] + '_nc_split_' + node.name
+                    new_input = helper.make_tensor(
+                                    new_input_name,
+                                    model.get_initializer(input_name).data_type,
+                                    model.get_initializer(input_name).dims,
+                                    model.get_initializer(input_name).raw_data,
+                                    True)
+                    model.add_initializer(new_input)
+                    node.input[2] = new_input_name
+    return model    
+
+def convert_np_to_float16(np_array, min_positive_val=1e-7, max_finite_val=1e4): # pragma: no cover
     '''
     Convert float32 numpy array to float16 without changing sign or finiteness.
     Positive values less than min_positive_val are mapped to min_positive_val.
@@ -83,7 +101,7 @@ def _npfloat16_to_int(np_list):
     '''
     return [int(bin(_.view('H'))[2:].zfill(16), 2) for _ in np_list]
 
-def cast_tensor(tensor, dtype, min_positive_val=1e-7, max_finite_val=1e4):
+def cast_tensor(tensor, dtype, min_positive_val=1e-7, max_finite_val=1e4): # pragma: no cover
     '''
     Convert tensor float to float16.
         param tensor: TensorProto object
@@ -121,23 +139,6 @@ def remove_init_from_model_input(model):
     for initializer in model.model.graph.initializer:
         if initializer.name in name_to_input:
             inputs.remove(name_to_input[initializer.name])
-
-def split_shared_input(model):
-    for input_name, node_list in model.input_name_to_nodes.items():
-        if len(node_list) > 1 and input_name in [i.name for i in model.model.graph.initializer]:
-            for node in node_list[1:]:
-                for i, node_input_name in enumerate(node.input):
-                    if node_input_name == input_name:
-                        new_input_name = node_input_name + '_nc_split_' + node.name
-                        new_input = helper.make_tensor(
-                                        new_input_name,
-                                        model.get_initializer(input_name).data_type,
-                                        model.get_initializer(input_name).dims,
-                                        model.get_initializer(input_name).raw_data,
-                                        True)
-                        model.add_initializer(new_input)
-                        node.input[i] = new_input_name
-    return model
 
 def collate_preds(results):
     batch = results[0]
@@ -260,7 +261,7 @@ def dequantize_data(tensor_value, scale_value, zo_value, axis=0): # pragma: no c
                                                new_per_channel_tensor_value), 0)
         return new_tensor_value
 
-class ValueInfo:
+class ValueInfo: # pragma: no cover
     def __init__(self,
                  tensor_name,
                  dtype,
@@ -281,7 +282,7 @@ class QuantizedValue:
                  quantized_value_type,
                  axis=None,
                  qType=QuantType.QUInt8):
-        self.original_name = name
+        self.name = name
         self.q_name = new_quantized_name
         self.scale_name = scale_name
         self.zp_name = zero_point_name
