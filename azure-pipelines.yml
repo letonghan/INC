@@ -36,9 +36,9 @@ stages:
   - job: MobileNetV2
     displayName: MobileNetV2
     steps:
-      # - script: 
-      #     cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager
-      #   displayName: 'change dir'
+      - script: 
+          pip install -r requirements.txt
+        displayName: 'Install INC requirements'
       - script: 
           pip install -r examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/requirements.txt
         displayName: 'Install requirements'
