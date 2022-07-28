@@ -38,6 +38,8 @@ stages:
     steps:
       - script: 
           cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager
+        displayName: 'change dir'
+      - script: 
           pip install -r requirements.txt
         displayName: 'Install requirements'
       - script: 
