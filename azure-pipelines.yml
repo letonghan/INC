@@ -38,13 +38,13 @@ stages:
     #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py        
     #   displayName: 'Run python sciprt'
 
-- stage: Distillation
-  dependsOn: Build
-  displayName: Distillation
-  jobs:
-  - job: MobileNetV2
-    displayName: MobileNetV2
-    steps:
+# - stage: Distillation
+#   dependsOn: Build
+#   displayName: Distillation
+#   jobs:
+#   - job: MobileNetV2
+#     displayName: MobileNetV2
+#     steps:
     - script: |
         docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
         docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /bin/sh /neural-compressor/my_test.sh
