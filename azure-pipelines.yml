@@ -28,6 +28,15 @@ stages:
         
     - script: docker build --build-arg PYTHON=${PYTHON} --build-arg INC_BRANCH=${INC_BRANCH} -f docker/Dockerfile.devel -t ${IMAGE_NAME}:${IMAGE_TAG} .
       displayName: 'Build Container'
+    
+    - script: |
+        docker images | grep -i neural-compressor
+      displayName: 'Check docker'
+
+    - script: |
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py        
+      displayName: 'Run python sciprt'
 
 - stage: Tuning
   dependsOn: Build
@@ -36,6 +45,8 @@ stages:
   - job: MobileNetV2
     displayName: MobileNetV2
     steps:
+      - script: 
+          chmod +x my_test.sh
       - script: 
           ./my_test.sh
         displayName: 'Tuning MobileNet'
