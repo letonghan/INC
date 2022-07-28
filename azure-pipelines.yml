@@ -15,7 +15,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: 'Build and push stage'
+  displayName: 'Build'
   jobs:
   - job: Build
     displayName: 'Build'
@@ -31,28 +31,21 @@ stages:
 
 - stage: Tuning
   dependsOn: Build
-  displayName: Tuning Pytorch Model
+  displayName: Tuning
   jobs:
-  - job: Quantization
-    displayName: Run Tuning
+  - job: MobileNetV2
+    displayName: MobileNetV2
     steps:
       - script: 
-          # pip install transformers==4.10.0
-          pip install -r examples/pytorch/nlp/huggingface_models/text-classification/quantization/ptq_static/fx/requirements.txt
-          # pip install torch
+          cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager
+          pip install -r requirements.txt
         displayName: 'Install requirements'
+      - script: 
+          python -u train_without_distillation.py 
+          --epochs 200 --lr 0.1 --layers 40 --widen-factor 2 --name WideResNet-40-2 --tensorboard
+        displayName: 'Training teacher model WideResNet40-2'  
       - script:
-          python -u examples/pytorch/nlp/huggingface_models/question-answering/quantization/ptq_static/fx/run_qa.py 
-          --model_name_or_path "bert-large-uncased-whole-word-masking-finetuned-squad" 
-          --dataset_name "squad" 
-          --do_eval 
-          --do_train 
-          --max_seq_length 128 
-          --per_device_eval_batch_size 16
-          --no_cuda 
-          --output_dir /saved_results
-          --tune 
-          --overwrite_output_dir 
-          --dataloader_drop_last
-        displayName: 'Tuning'
+          python -u main.py 
+          --epochs 200 --lr 0.02 --name MobileNetV2-0.35-distillation --teacher_model runs/WideResNet-40-2/model_best.pth.tar --tensorboard --seed 9
+        displayName: 'Distillation'
     
