@@ -43,6 +43,12 @@ stages:
           pip install -r examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/requirements.txt
         displayName: 'Install requirements'
       - script: 
+          pip install neural_compressor
+        displayName: 'Install neural_compressor'
+      - script: 
+          pip list
+        displayName: 'show pip list'
+      - script: 
           python -u examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/train_without_distillation.py 
           --epochs 1 --lr 0.1 --layers 40 --widen-factor 2 --name WideResNet-40-2 --tensorboard
         displayName: 'Training teacher model WideResNet40-2'  
