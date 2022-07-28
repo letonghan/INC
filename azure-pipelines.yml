@@ -49,6 +49,6 @@ stages:
       - script:
           python -u examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/main.py 
           --epochs 1 --lr 0.02 --name MobileNetV2-0.35-distillation 
-          --teacher_model examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/runs/WideResNet-40-2/model_best.pth.tar --tensorboard --seed 9
+          --teacher_model runs/WideResNet-40-2/model_best.pth.tar --tensorboard --seed 9
         displayName: 'Distillation'
     
