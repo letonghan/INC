@@ -2,10 +2,10 @@
 set -x
 
 echo "Installing requirements"
-pip install -r requirements.txt
-pip install neural_compressor
+#pip install -r requirements.txt
+#pip install neural_compressor
 cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager
-pip install -r requirements.txt
+#pip install -r requirements.txt
 echo "======= pip list ======="
 pip list
 echo "Training teacher model WideResNet40-2"
