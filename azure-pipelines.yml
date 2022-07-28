@@ -33,21 +33,25 @@ stages:
         docker images | grep -i neural-compressor
       displayName: 'Check docker'
 
-    - script: |
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py        
-      displayName: 'Run python sciprt'
+    # - script: |
+    #     docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
+    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py        
+    #   displayName: 'Run python sciprt'
 
-- stage: Tuning
+- stage: Distillation
   dependsOn: Build
-  displayName: Tuning
+  displayName: Distillation
   jobs:
   - job: MobileNetV2
     displayName: MobileNetV2
     steps:
-      - script: 
-          chmod +x my_test.sh
-      - script: 
-          ./my_test.sh
-        displayName: 'Tuning MobileNet'
+    - script: |
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /bin/sh /neural-compressor/my_test.sh
+      displayName: 'Distillation of MobileNetV2'
+      # - script: 
+      #     chmod +x my_test.sh
+      # - script: 
+      #     ./my_test.sh
+      #   displayName: 'Tuning MobileNet'
     
