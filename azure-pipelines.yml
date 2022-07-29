@@ -32,9 +32,7 @@ stages:
     
     - script: |
         docker images | grep -i neural-compressor
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} cd examples
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples && ls"
       displayName: 'Check docker'
     
     # - script: |
