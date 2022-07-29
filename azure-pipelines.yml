@@ -32,8 +32,12 @@ stages:
     
     - script: |
         docker images | grep -i neural-compressor
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples && ls"
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager && ls"
       displayName: 'Check docker'
+    
+    - script: |
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
+      displayName: 'ls'
     
     # - script: |
     #     docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
