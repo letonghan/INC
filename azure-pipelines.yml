@@ -33,6 +33,12 @@ stages:
     - script: |
         docker images | grep -i neural-compressor
       displayName: 'Check docker'
+    
+    - script: |
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py
+        
+      displayName: 'Run python sciprt'
 
   - job: MobileNetV2
     displayName: 'Distillation of MobileNetV2'
