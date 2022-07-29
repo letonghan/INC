@@ -33,6 +33,8 @@ stages:
     - script: |
         docker images | grep -i neural-compressor
         pwd
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} pwd
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
       displayName: 'Check docker'
     
     # - script: |
