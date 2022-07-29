@@ -33,7 +33,7 @@ stages:
     - script: |
         docker images | grep -i neural-compressor
         docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} cd examples
         docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
       displayName: 'Check docker'
     
