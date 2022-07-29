@@ -41,8 +41,17 @@ stages:
     #   displayName: 'Run python sciprt'
     
     - script: |
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} /bin/sh examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_tuning.sh --topology=topology_name
-
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_summarization.py
+        --model_name_or_path lvwerra/pegasus-samsum
+        --do_train
+        --do_eval
+        --predict_with_generate
+        --per_device_eval_batch_size 16
+        --output_dir saved_results
+        --overwrite_output_dir
+        --tune
+      displayName: 'Tuning Summarization'
+        
     # - script: |
     #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python train_without_distillation.py --epochs 200 --lr 0.1 --layers 40 --widen-factor 2 --name WideResNet-40-2 --tensorboard
     #   displayName: 'Train teacher model'
