@@ -45,8 +45,8 @@ stages:
     steps:
     - script: |
         docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} ls && cd /neural-compressor/tree/master/examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python train_without_distillation.py --epochs 200 --lr 0.1 --layers 40 --widen-factor 2 --name WideResNet-40-2 --tensorboard
+      #  docker run ${IMAGE_NAME}:${IMAGE_TAG} ls && cd /neural-compressor/tree/master/examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager/
+      #  docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python train_without_distillation.py --epochs 200 --lr 0.1 --layers 40 --widen-factor 2 --name WideResNet-40-2 --tensorboard
       displayName: 'Train teacher model'
     - script: |
         docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python main.py --epochs 200 --lr 0.02 --name MobileNetV2-0.35-distillation --teacher_model runs/WideResNet-40-2/model_best.pth.tar --tensorboard --seed 9 
