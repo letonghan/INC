@@ -30,19 +30,18 @@ stages:
     - script: docker build --build-arg PYTHON=${PYTHON} --build-arg INC_BRANCH=${INC_BRANCH} -f docker/Dockerfile.devel -t ${IMAGE_NAME}:${IMAGE_TAG} .
       displayName: 'Build Container'
     
-    - script: |
-        docker images | grep -i neural-compressor
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager && ls"
-      displayName: 'Check docker'
-    
-    - script: |
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} ls
-      displayName: 'ls'
+    # - script: |
+    #     docker images | grep -i neural-compressor
+    #     docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/image_recognition/MobileNetV2-0.35/distillation/eager && ls"
+    #   displayName: 'Check docker'
     
     # - script: |
     #     docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
     #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py
     #   displayName: 'Run python sciprt'
+    
+    - script: |
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} /bin/sh examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_tuning.sh --topology=topology_name
 
     # - script: |
     #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python train_without_distillation.py --epochs 200 --lr 0.1 --layers 40 --widen-factor 2 --name WideResNet-40-2 --tensorboard
