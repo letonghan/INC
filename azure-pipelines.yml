@@ -46,7 +46,15 @@ stages:
       displayName: 'Install model requirements'
 
     - script: |
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_tuning.sh --topology=pegasus_samsum"
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager && /usr/local/bin/python run_summarization.py --model_name_or_path lvwerra/pegasus-samsum
+        --do_train
+        --do_eval
+        --predict_with_generate
+        --per_device_eval_batch_size 16
+        --output_dir saved_results
+        --overwrite_output_dir
+        --tune"
+      #  docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_tuning.sh --topology=pegasus_samsum"
       #   docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_summarization.py
       #   --model_name_or_path lvwerra/pegasus-samsum
       #   --do_train
