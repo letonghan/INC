@@ -45,7 +45,7 @@ stages:
     
     - script: |
         docker run ${IMAGE_NAME}:${IMAGE_TAG} python -m pip install --no-cache-dir -r examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/requirements.txt
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} python -m pip install --no-cache-dir pip list
+        docker run ${IMAGE_NAME}:${IMAGE_TAG} python -m pip list
       displayName: 'Install model requirements'
 
     - script: |
