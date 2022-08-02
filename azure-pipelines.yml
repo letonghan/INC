@@ -32,36 +32,16 @@ stages:
     
     - script: |
         docker images | grep -i neural-compressor
-      #  echo "------ /usr/local/bin ------"
-      #  docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/bin && ls"
-      #  echo "------ /usr/local/lib ------"
-      #  docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/lib && ls"
       displayName: 'Check docker'
     
     # - script: |
     #     docker run ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -c "import neural_compressor as nc;print(nc.version.__version__)"
     #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/test/config/test_config.py
     #   displayName: 'Run python sciprt'
-    
-    # - script: |
-    #     echo "-------- pip install ---------"
-    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -m pip install --target=/usr/local/lib/python3.8/dist-packages -r examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/requirements.txt
-    #     echo "-------- check dataset location ------"
-    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -m pip show datasets
-    #     echo "-------- show python settings -------"
-    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} python -m site
-    #     echo "-------- show python3 settings -------"
-    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} python3 -m site
-    #     echo "-------- show /usr/local/bin/python settings -------"
-    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -m site
-    #     echo "-------- /usr/local/lib/python3.8/dist-packages --------"
-    #     docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/lib/python3.8/dist-packages && ls"
-    #     echo "--------pip list --------"
-    #     docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python -m pip list
-    #   displayName: 'Install model requirements'
 
     - script: |
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager && python -m pip install -r requirements.txt && python -m pip install protobuf==3.20.0 && python run_summarization.py --model_name_or_path lvwerra/pegasus-samsum --do_train --do_eval --predict_with_generate --per_device_eval_batch_size 16 --output_dir saved_results --overwrite_output_dir --tune --dataset_name samsum"
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/nlp/huggingface_models/common && python setup.py install && cd examples/pytorch/nlp/huggingface_models/language-modeling/quantization/ptq_static/eager && pip install -r requirements.txt && pip install torch>=1.7 && python -u run_clm_tune.py --model_name_or_path microsoft/DialoGPT-small --dataset_name wikitext --dataset_config_name wikitext-2-raw-v1 --do_train --do_eval --output_dir saved_results"
+      #  docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager && python -m pip install -r requirements.txt && python -m pip install protobuf==3.20.0 && python -u run_summarization.py --model_name_or_path lvwerra/pegasus-samsum --do_train --do_eval --predict_with_generate --per_device_eval_batch_size 16 --output_dir saved_results --overwrite_output_dir --tune --dataset_name samsum"
       #  docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python /neural-compressor/examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_summarization.py --model_name_or_path lvwerra/pegasus-samsum --do_train --do_eval --predict_with_generate --per_device_eval_batch_size 16 --output_dir saved_results --overwrite_output_dir --tune
       #  docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager && /usr/local/bin/python3 run_summarization.py --model_name_or_path lvwerra/pegasus-samsum --do_train --do_eval --predict_with_generate --per_device_eval_batch_size 16 --output_dir saved_results --overwrite_output_dir --tune"
       #  docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} bash -c "examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/run_tuning.sh --topology=pegasus_samsum"
