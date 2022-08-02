@@ -44,7 +44,7 @@ stages:
     #   displayName: 'Run python sciprt'
     
     - script: |
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python3 -m install -r examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/requirements.txt
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} /usr/local/bin/python3 -m pip install -r examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/requirements.txt
         echo "-------- /usr/local/lib/python3.8/dist-packages --------"
         docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/lib/python3.8/dist-packages && ls"
         echo "--------pip list --------"
