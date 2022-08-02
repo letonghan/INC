@@ -34,8 +34,6 @@ stages:
         docker images | grep -i neural-compressor
         echo "------ /usr/local/bin ------"
         docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/bin && ls"
-        echo "------ /usr/local/bin/python ------"
-        docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/bin/python && ls"
         echo "------ /usr/local/lib ------"
         docker run ${IMAGE_NAME}:${IMAGE_TAG} bash -c "cd /usr/local/lib && ls"
       displayName: 'Check docker'
@@ -46,9 +44,9 @@ stages:
     #   displayName: 'Run python sciprt'
     
     - script: |
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} python -m pip install --no-cache-dir -r examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/requirements.txt
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} python3.8 -m pip install --no-cache-dir -r examples/pytorch/nlp/huggingface_models/summarization/quantization/ptq_dynamic/eager/requirements.txt
         echo "-------- pip list --------"
-        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} python -m pip list
+        docker run --env PYTHONPATH="/neural-compressor" ${IMAGE_NAME}:${IMAGE_TAG} python3.8 -m pip list
       displayName: 'Install model requirements'
 
     # - script: |
